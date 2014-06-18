@@ -9,9 +9,9 @@ import com.GGI.grid.GridBlock;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -30,6 +30,14 @@ public class GameScreen implements Screen{
 	private ArrayList<GridBlock> blocks;
 	private GridBlock[][] grid;
 	private int sideBuffer;
+	
+	private Texture open;
+	private Texture blocked;
+	private Texture selected;
+	private Texture start;
+	private Texture end;
+	
+	private SpriteBatch pix;
 	
 	public GameScreen(int difficulty){
 		this.difficulty = difficulty;
@@ -60,6 +68,7 @@ public class GameScreen implements Screen{
 		
 		//debugRenderer.setProjectionMatrix(cam.view);
 		debugRenderer.begin(ShapeType.Line);
+		
 		for (GridBlock b : blocks) {
 			Rectangle rect = b.getBounds();
 			float x1 = (b.getPosition().x + rect.x);
@@ -83,6 +92,33 @@ public class GameScreen implements Screen{
 		}
 		debugRenderer.end();
 		
+		pix.begin();
+		
+		for (GridBlock b : blocks) {
+			
+			
+			Texture temp = null;
+			
+			Rectangle rect = b.getBounds();
+			float x1 = (b.getPosition().x + rect.x);
+			float y1 = (b.getPosition().y + rect.y);
+			
+			switch(b.getState()){
+			case 0: temp = blocked;
+			break;
+			case 1: temp = open;
+			break;
+			case 2: temp = selected;
+			break;
+			case 3: temp = start;
+			break;
+			case 4: temp = end;
+			break;
+			}
+			pix.draw(temp,(x1*difficulty)+(sideBuffer/2), y1*difficulty, rect.width*difficulty, rect.height*difficulty);
+		}
+		
+		pix.end();
 	}
 
 	@Override
@@ -96,11 +132,14 @@ public class GameScreen implements Screen{
 		
 		xU = Gdx.graphics.getWidth()/difficulty;
 		yU = Gdx.graphics.getHeight()/difficulty;
-
+		
+		pix = new SpriteBatch();
+		
 		sideBuffer = Gdx.graphics.getWidth()%difficulty;
 
 		//this.cam = new OrthographicCamera(xU,yU);
 		blocks = new ArrayList<GridBlock>();
+		setImages();
 		genGrid();
 		
 	}
@@ -129,4 +168,12 @@ public class GameScreen implements Screen{
 		
 	}
 
+	private void setImages() {
+		open = new Texture(Gdx.files.internal("open.png"));
+		blocked = new Texture(Gdx.files.internal("blocked.png"));
+		selected = new Texture(Gdx.files.internal("selected.png"));
+		start = new Texture(Gdx.files.internal("start.png"));
+		end = new Texture(Gdx.files.internal("end.png"));
+	}
+	
 }
