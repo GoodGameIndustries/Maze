@@ -45,8 +45,12 @@ public class GameScreen implements Screen{
 			}
 		}
 		
+<<<<<<< HEAD
 		grid[(int) (Math.random()*grid.length)][0].setState(3);
 		grid[(int) (Math.random()*grid.length)][grid[0].length-1].setState(4);
+=======
+		
+>>>>>>> origin/master
 	}
 
 	@Override
@@ -93,7 +97,9 @@ public class GameScreen implements Screen{
 		
 		xU = Gdx.graphics.getWidth()/difficulty;
 		yU = Gdx.graphics.getHeight()/difficulty;
+
 		sideBuffer = Gdx.graphics.getWidth()%difficulty;
+
 		//this.cam = new OrthographicCamera(xU,yU);
 		blocks = new ArrayList<GridBlock>();
 		genGrid();
