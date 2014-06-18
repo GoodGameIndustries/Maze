@@ -44,6 +44,7 @@ public class GameScreen implements Screen{
 			}
 		}
 		
+		
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public class GameScreen implements Screen{
 	@Override
 	public void show() {
 		xU = Gdx.graphics.getWidth()/difficulty;
-		yU = Gdx.graphics.getWidth()/difficulty;
+		yU = Gdx.graphics.getHeight()/difficulty;
 		//this.cam = new OrthographicCamera(xU,yU);
 		blocks = new ArrayList<GridBlock>();
 		genGrid();
