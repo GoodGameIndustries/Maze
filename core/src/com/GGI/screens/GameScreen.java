@@ -54,11 +54,52 @@ public class GameScreen implements Screen,InputProcessor{
 			}
 		}
 
+		int startRow=(int) (Math.random()*grid.length);
+		grid[startRow][0].setState(3);
+		genPath(startRow,0);
 		
 
-		grid[(int) (Math.random()*grid.length)][0].setState(3);
-		grid[(int) (Math.random()*grid.length)][grid[0].length-1].setState(4);
-
+	}
+	
+	public void genPath(int row, int column){
+		int select=(int) (Math.random()*4);
+		if(select==0){
+			if(row-1 <0){genPath(row,column);}
+			else{
+				if(grid[row-1][column].getState()!=3){
+					grid[row-1][column].setState(1);genPath(row-1,column);
+				}
+				else{genPath(row,column);}
+			}
+		}
+		else if(select==1){
+			if(row+1>grid.length-1 ){genPath(row,column);}
+			else{
+				if(grid[row+1][column].getState()!=3){
+					grid[row+1][column].setState(1);genPath(row+1,column);
+				}
+				else{genPath(row,column);}
+			}
+		}
+		else if(select==2){
+			if(column-1<0 ){genPath(row,column);}
+			else{
+				if(grid[row][column-1].getState()!=3){
+					grid[row][column-1].setState(1);genPath(row,column-1);
+				}
+				else{genPath(row,column);}
+			}
+		}
+		else if(select==3){
+			if(column+1==grid[0].length-1){grid[row][column+1].setState(4);return;}
+			if(column+1>grid[0].length-1){genPath(row,column);}
+			else{
+				if(grid[row][column+1].getState()!=3){
+					grid[row][column+1].setState(1);genPath(row,column+1);
+				}
+				else{genPath(row,column);}
+			}
+		}
 	}
 
 	@Override
