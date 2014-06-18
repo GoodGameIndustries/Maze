@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.GGI.grid.GridBlock;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
@@ -21,7 +22,7 @@ import com.badlogic.gdx.math.Vector2;
  * @author Emmett Deen
  *
  */
-public class GameScreen implements Screen{
+public class GameScreen implements Screen,InputProcessor{
 	private float xU;
 	private float yU;
 	private int difficulty;
@@ -141,7 +142,7 @@ public class GameScreen implements Screen{
 		blocks = new ArrayList<GridBlock>();
 		setImages();
 		genGrid();
-		
+		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
@@ -175,5 +176,74 @@ public class GameScreen implements Screen{
 		start = new Texture(Gdx.files.internal("start.png"));
 		end = new Texture(Gdx.files.internal("end.png"));
 	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if(getGridTouch(screenX,screenY)!=null){
+			getGridTouch(screenX,screenY).setState(2);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		if(getGridTouch(screenX,screenY)!=null){
+			getGridTouch(screenX,screenY).setState(2);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
+	private GridBlock getGridTouch(int x,int y){
+		GridBlock result = null;
+		for(GridBlock b: blocks){
+			//x=Gdx.graphics.getWidth()-x;
+			//y=Gdx.graphics.getHeight()-y;
+			Rectangle rect = b.getBounds();
+			float x1 = (b.getPosition().x + rect.x)*difficulty;
+			float y1 = (b.getPosition().y + rect.y)*difficulty;
+			if((x>x1 && x<x1+(rect.width*difficulty)) && (y>y1 && y<y1+(rect.height*difficulty))){
+				result = b;
+				break;
+			}
+		}
+		
+		return result;
+		
+	}
 }
