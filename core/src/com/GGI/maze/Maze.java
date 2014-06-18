@@ -17,7 +17,7 @@ public class Maze extends Game {
 	public void create () {
 		//batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
-		setScreen(new MenuScreen());
+		setScreen(new GameScreen(100));
 	}
 
 	

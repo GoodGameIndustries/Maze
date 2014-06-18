@@ -135,7 +135,7 @@ public class AndroidLauncher extends AndroidApplication {
     ll.addView(b1);
 
     Button b2 = new Button(this);
-    b2.setText("Tap for Ta-Tas");
+    b2.setText("Maze Runner");
     b2.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_URL)));
