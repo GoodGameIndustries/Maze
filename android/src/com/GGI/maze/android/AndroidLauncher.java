@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
-
+import com.GGI.maze.Maze;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.android.gms.ads.AdRequest;
@@ -45,11 +45,7 @@ public class AndroidLauncher extends AndroidApplication {
     cfg.useCompass = false;
     launch = this;
     
-    AdBuddiz.setPublisherKey("9a984e01-5ccd-497d-a6a2-cf4c629b88be");
-    AdBuddiz.cacheAds(this); // this = current Activity
-    
-    myTimer();
-
+  
     // Do the stuff that initialize() would do for you
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -82,7 +78,7 @@ public class AndroidLauncher extends AndroidApplication {
   }
 
   private View createGameView(AndroidApplicationConfiguration cfg) {
-    gameView = initializeForView(new TapForTitties(), cfg);
+    gameView = initializeForView(new Maze(), cfg);
     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     params.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
     params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
@@ -151,5 +147,5 @@ public class AndroidLauncher extends AndroidApplication {
     dialog.setContentView(ll);
     dialog.show();
   }
-  
+}
  
