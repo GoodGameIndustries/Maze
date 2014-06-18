@@ -44,8 +44,6 @@ public class GameScreen implements Screen{
 				grid[i][j] = blocks.get(blocks.size()-1);
 			}
 		}
-		grid[(int) (xU-1)][0].setState(3);
-		
 	}
 
 	@Override

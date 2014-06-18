@@ -39,6 +39,8 @@ public class GridBlock {
 		// TODO Auto-generated method stub
 		return state;
 	}
+
+	
 	
 	public void setState(int i){
 		state=i;
