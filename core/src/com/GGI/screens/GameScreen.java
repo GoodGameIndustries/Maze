@@ -29,6 +29,7 @@ public class GameScreen implements Screen{
 	private ShapeRenderer debugRenderer = new ShapeRenderer();
 	private ArrayList<GridBlock> blocks;
 	private GridBlock[][] grid;
+	private int sideBuffer;
 	
 	public GameScreen(int difficulty){
 		this.difficulty = difficulty;
@@ -73,8 +74,8 @@ public class GameScreen implements Screen{
 			break;
 			}
 			
-			debugRenderer.setColor(new Color(1, 0, 0, 1));
-			debugRenderer.rect(x1*difficulty, y1*difficulty, rect.width*difficulty, rect.height*difficulty);
+			//debugRenderer.setColor(new Color(1, 0, 0, 1));
+			debugRenderer.rect((x1*difficulty)+(sideBuffer/2), y1*difficulty, rect.width*difficulty, rect.height*difficulty);
 		}
 		debugRenderer.end();
 		
@@ -88,8 +89,12 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void show() {
+		
 		xU = Gdx.graphics.getWidth()/difficulty;
 		yU = Gdx.graphics.getHeight()/difficulty;
+
+		sideBuffer = Gdx.graphics.getWidth()%difficulty;
+
 		//this.cam = new OrthographicCamera(xU,yU);
 		blocks = new ArrayList<GridBlock>();
 		genGrid();
