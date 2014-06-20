@@ -31,6 +31,7 @@ public class GameScreen implements Screen,InputProcessor{
 	private ArrayList<GridBlock> blocks;
 	private GridBlock[][] grid;
 	private int sideBuffer;
+	private int recurCounter=0;
 	
 	private Texture open;
 	private Texture blocked;
@@ -56,52 +57,74 @@ public class GameScreen implements Screen,InputProcessor{
 
 		int startRow=(int) (Math.random()*grid.length);
 		grid[startRow][0].setState(3);
-		genPath(startRow,0);
+		genPath(startRow,0,1);
 		
 
 	}
 	
-	public void genPath(int row, int column){
-		int select=(int) (Math.random()*4);
+	public void genPath(int row, int column,int select){
+		recurCounter++;
+		/*if(recurCounter>4){
+			recurCounter=0;
+			return;
+		}*/
 		if(select==0){
-			if(row-1 <0){genPath(row,column);}
+			if(row-1 <=0){genPath(row,column,(select+1)%4);}
 			else{
-				if(grid[row-1][column].getState()!=3){
-					grid[row-1][column].setState(1);genPath(row-1,column);
+				if(grid[row-1][column].getState()!=3 && pathAval(row-1,column,select)){
+					grid[row-1][column].setState(1);genPath(row-1,column,(int) (Math.random()*4));
 				}
-				else{genPath(row,column);}
+				else{genPath(row,column,(select+1)%4);}
 			}
 		}
 		else if(select==1){
-			if(row+1>grid.length-1 ){genPath(row,column);}
+			if(row+1>=grid.length-1 ){genPath(row,column,(select+1)%4);}
 			else{
-				if(grid[row+1][column].getState()!=3){
-					grid[row+1][column].setState(1);genPath(row+1,column);
+				if(grid[row+1][column].getState()!=3 && pathAval(row+1,column,select)){
+					grid[row+1][column].setState(1);genPath(row+1,column,(int) (Math.random()*4));
 				}
-				else{genPath(row,column);}
+				else{genPath(row,column,(select+1)%4);}
 			}
 		}
 		else if(select==2){
-			if(column-1<0 ){genPath(row,column);}
+			if(column-1<=0 ){genPath(row,column,(select+1)%4);}
 			else{
-				if(grid[row][column-1].getState()!=3){
-					grid[row][column-1].setState(1);genPath(row,column-1);
+				if(grid[row][column-1].getState()!=3 && pathAval(row,column-1,select)){
+					grid[row][column-1].setState(1);genPath(row,column-1,(int) (Math.random()*4));
 				}
-				else{genPath(row,column);}
+				else{genPath(row,column,(select+1)%4);}
 			}
 		}
 		else if(select==3){
 			if(column+1==grid[0].length-1){grid[row][column+1].setState(4);return;}
-			if(column+1>grid[0].length-1){genPath(row,column);}
+			if(column+1>=grid[0].length-1){genPath(row,column,(select+1)%4);}
 			else{
-				if(grid[row][column+1].getState()!=3){
-					grid[row][column+1].setState(1);genPath(row,column+1);
+				if(grid[row][column+1].getState()!=3 && pathAval(row,column+1,select)){
+					grid[row][column+1].setState(1);genPath(row,column+1,(int) (Math.random()*4));
 				}
-				else{genPath(row,column);}
+				else{genPath(row,column,(select+1)%4);}
 			}
 		}
 	}
-
+	
+	public boolean pathAval(int row, int column,int select){
+		int count=0;
+		if(row-1>=0 ){
+			if(grid[row-1][column].getState()==1){count++;}
+		}
+		if(row+1<=grid.length-1 ){
+			if(grid[row+1][column].getState()==1){count++;}
+		}
+		if(column-1>=0 ){
+			if(grid[row][column-1].getState()==1){count++;}
+		}
+		if(column+1<=grid[0].length-1 ){
+			if(grid[row][column+1].getState()==1){count++;}
+		}
+		if(count>1){return false;}
+		else{return true;}
+	}
+	
 	@Override
 	public void render(float delta) {
 
