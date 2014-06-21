@@ -295,19 +295,23 @@ public class GameScreen implements Screen,InputProcessor{
 	
 	private GridBlock getGridTouch(int x,int y){
 		GridBlock result = null;
+		System.out.println("<"+x+","+y+">");
 		for(GridBlock b: blocks){
 			//x=Gdx.graphics.getWidth()-x;
 			//y=Gdx.graphics.getHeight()-y;
 			Rectangle rect = b.getBounds();
 			float x1 = (b.getPosition().x + rect.x)*difficulty;
 			float y1 = (b.getPosition().y + rect.y)*difficulty;
+			y1=Gdx.graphics.getHeight()-y1-rect.height*difficulty;
 			if((x>x1 && x<x1+(rect.width*difficulty)) && (y>y1 && y<y1+(rect.height*difficulty))){
 				
 				
 				result = b;
+				System.out.println(x1+" "+y1);
 				break;
 			}
 		}
+		
 		
 		return result;
 		
