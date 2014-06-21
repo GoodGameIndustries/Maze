@@ -16,6 +16,7 @@ public class GridBlock {
 	private float size = 1f;
 	private Vector2 position;
 	private Rectangle bounds;
+	private boolean correctPath=false;
 	
 	public GridBlock(Vector2 position){
 		this.position = position;
@@ -45,5 +46,9 @@ public class GridBlock {
 	public void setState(int i){
 		state=i;
 	}
+	
+	public void setCorrectPath(){correctPath=true;}
+	
+	public boolean getCorrectPath(){return correctPath;}
 	
 }

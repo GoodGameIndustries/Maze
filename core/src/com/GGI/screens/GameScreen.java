@@ -57,8 +57,13 @@ public class GameScreen implements Screen,InputProcessor{
 
 		int startRow=(int) (Math.random()*grid.length);
 		grid[startRow][0].setState(3);
-		genPath(startRow,0,1);
-		
+		try{
+			genPath(startRow,0,1);
+		}
+		catch(StackOverflowError e){
+			genGrid();
+		}
+		genWalls();
 
 	}
 	
@@ -66,13 +71,14 @@ public class GameScreen implements Screen,InputProcessor{
 		recurCounter++;
 		/*if(recurCounter>4){
 			recurCounter=0;
-			return;
+			//genGrid();
+			
 		}*/
 		if(select==0){
 			if(row-1 <=0){genPath(row,column,(select+1)%4);}
 			else{
 				if(grid[row-1][column].getState()!=3 && pathAval(row-1,column,select)){
-					grid[row-1][column].setState(1);genPath(row-1,column,(int) (Math.random()*4));
+					grid[row-1][column].setCorrectPath();genPath(row-1,column,(int) (Math.random()*4));
 				}
 				else{genPath(row,column,(select+1)%4);}
 			}
@@ -81,7 +87,7 @@ public class GameScreen implements Screen,InputProcessor{
 			if(row+1>=grid.length-1 ){genPath(row,column,(select+1)%4);}
 			else{
 				if(grid[row+1][column].getState()!=3 && pathAval(row+1,column,select)){
-					grid[row+1][column].setState(1);genPath(row+1,column,(int) (Math.random()*4));
+					grid[row+1][column].setCorrectPath();genPath(row+1,column,(int) (Math.random()*4));
 				}
 				else{genPath(row,column,(select+1)%4);}
 			}
@@ -90,7 +96,7 @@ public class GameScreen implements Screen,InputProcessor{
 			if(column-1<=0 ){genPath(row,column,(select+1)%4);}
 			else{
 				if(grid[row][column-1].getState()!=3 && pathAval(row,column-1,select)){
-					grid[row][column-1].setState(1);genPath(row,column-1,(int) (Math.random()*4));
+					grid[row][column-1].setCorrectPath();genPath(row,column-1,(int) (Math.random()*4));
 				}
 				else{genPath(row,column,(select+1)%4);}
 			}
@@ -100,7 +106,7 @@ public class GameScreen implements Screen,InputProcessor{
 			if(column+1>=grid[0].length-1){genPath(row,column,(select+1)%4);}
 			else{
 				if(grid[row][column+1].getState()!=3 && pathAval(row,column+1,select)){
-					grid[row][column+1].setState(1);genPath(row,column+1,(int) (Math.random()*4));
+					grid[row][column+1].setCorrectPath();genPath(row,column+1,(int) (Math.random()*4));
 				}
 				else{genPath(row,column,(select+1)%4);}
 			}
@@ -123,6 +129,20 @@ public class GameScreen implements Screen,InputProcessor{
 		}
 		if(count>1){return false;}
 		else{return true;}
+	}
+	
+	public void genWalls(){
+		System.out.println(grid.length+" "+grid[0].length);
+		for(int i=0;i<grid[0].length;i++){
+			for(int j=0;j<grid.length;j++){
+				if(grid[j][i].getState()==0){grid[j][i].setState(1);}
+				int wall=(int)(Math.random()*3);
+				if(wall%3!=0 && !grid[j][i].getCorrectPath() && grid[j][i].getState()!=3 && grid[j][i].getState()!=4){
+					grid[j][i].setState(0);
+				}
+			}
+			
+		}
 	}
 	
 	@Override
@@ -261,7 +281,7 @@ public class GameScreen implements Screen,InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(getGridTouch(screenX,screenY)!=null){
+		if(getGridTouch(screenX,screenY)!=null && getGridTouch(screenX,screenY).getState()!=0){
 			getGridTouch(screenX,screenY).setState(2);
 		}
 		return true;
@@ -275,7 +295,7 @@ public class GameScreen implements Screen,InputProcessor{
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		if(getGridTouch(screenX,screenY)!=null){
+		if(getGridTouch(screenX,screenY)!=null && getGridTouch(screenX,screenY).getState()!=0){
 			getGridTouch(screenX,screenY).setState(2);
 		}
 		return true;
