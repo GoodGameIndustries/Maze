@@ -279,6 +279,8 @@ public class GameScreen implements Screen,InputProcessor{
 			float x1 = (b.getPosition().x + rect.x)*difficulty;
 			float y1 = (b.getPosition().y + rect.y)*difficulty;
 			if((x>x1 && x<x1+(rect.width*difficulty)) && (y>y1 && y<y1+(rect.height*difficulty))){
+				
+				
 				result = b;
 				break;
 			}
