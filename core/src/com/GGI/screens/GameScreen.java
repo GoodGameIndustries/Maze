@@ -58,12 +58,13 @@ public class GameScreen implements Screen,InputProcessor{
 		int startRow=(int) (Math.random()*grid.length);
 		grid[startRow][0].setState(3);
 		try{
-			genPath(startRow,0,1);
+			//genPath(startRow,0,1);
+			genPath(grid[startRow][0]);
 		}
 		catch(StackOverflowError e){
 			genGrid();
 		}
-		genWalls();
+		//genWalls();
 
 	}
 	
@@ -113,6 +114,31 @@ public class GameScreen implements Screen,InputProcessor{
 		}
 	}
 	
+	public void genPath(GridBlock start){
+		int i = 0;
+		GridBlock current = start;
+		while(current.getPosition().y!=grid[0].length-1){
+			GridBlock[] walls = getAdjacent(current);
+			int r = (int) (Math.random()*walls.length);
+			while(walls[r] == null){r = (int) (Math.random()*walls.length);}
+			
+			walls[r].setState(1);
+			current=walls[r];
+		}
+		
+	}
+	
+	private GridBlock[] getAdjacent(GridBlock current) {
+		GridBlock[] result = new GridBlock[4];
+		
+		try{result[0] = grid[(int) current.getPosition().x][(int) current.getPosition().y+1];}catch(ArrayIndexOutOfBoundsException e){result[0]=null;}
+		try{result[1] = grid[(int) current.getPosition().x+1][(int) current.getPosition().y];}catch(ArrayIndexOutOfBoundsException e){result[1]=null;}
+		try{result[2] = grid[(int) current.getPosition().x][(int) current.getPosition().y-1];}catch(ArrayIndexOutOfBoundsException e){result[2]=null;}
+		try{result[3] = grid[(int) current.getPosition().x-1][(int) current.getPosition().y];}catch(ArrayIndexOutOfBoundsException e){result[3]=null;}
+		
+		return result;
+	}
+
 	public boolean pathAval(int row, int column,int select){
 		int count=0;
 		if(row-1>=0 ){
@@ -131,6 +157,7 @@ public class GameScreen implements Screen,InputProcessor{
 		else{return true;}
 	}
 	
+	/*
 	public void genWalls(){
 		for(int i=0;i<grid.length;i++){
 			for(int j=0;j<grid[i].length;j++){
@@ -156,7 +183,7 @@ public class GameScreen implements Screen,InputProcessor{
 			}
 		}
 	}
-	
+	*/
 	@Override
 	public void render(float delta) {
 
