@@ -132,16 +132,28 @@ public class GameScreen implements Screen,InputProcessor{
 	}
 	
 	public void genWalls(){
-		System.out.println(grid.length+" "+grid[0].length);
-		for(int i=0;i<grid[0].length;i++){
-			for(int j=0;j<grid.length;j++){
-				if(grid[j][i].getState()==0){grid[j][i].setState(1);}
-				int wall=(int)(Math.random()*3);
-				if(wall%3!=0 && !grid[j][i].getCorrectPath() && grid[j][i].getState()!=3 && grid[j][i].getState()!=4){
-					grid[j][i].setState(0);
+		for(int i=0;i<grid.length;i++){
+			for(int j=0;j<grid[i].length;j++){
+				if(grid[i][j].getState()!=3 && grid[i][j].getState()!=4){
+					grid[i][j].setState(1);
+				}
+				int wallStart=(int)(Math.random()*grid[0].length);
+				int wallLength=3;
+				for(int k=wallStart;k<wallStart+wallLength;k++){
+					int l=k%grid[0].length;
+					if(grid[i][l].getState()!=3 && grid[i][l].getState()!=4 && !grid[i][l].getCorrectPath()){
+						grid[i][l].setState(0);
+					}
+				}
+				wallStart=(int)(Math.random()*grid[0].length);
+				wallLength=2;
+				for(int k=wallStart;k<wallStart+wallLength;k++){
+					int l=k%grid[0].length;
+					if(grid[i][l].getState()!=3 && grid[i][l].getState()!=4 && !grid[i][l].getCorrectPath()){
+						grid[i][l].setState(0);
+					}
 				}
 			}
-			
 		}
 	}
 	
