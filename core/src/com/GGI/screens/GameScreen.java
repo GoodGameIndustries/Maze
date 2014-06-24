@@ -191,6 +191,7 @@ public class GameScreen implements Screen,InputProcessor{
 		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 		
 		//debugRenderer.setProjectionMatrix(cam.view);
+/*
 		debugRenderer.begin(ShapeType.Line);
 		
 		for (GridBlock b : blocks) {
@@ -215,7 +216,7 @@ public class GameScreen implements Screen,InputProcessor{
 			debugRenderer.rect((x1*difficulty)+(sideBuffer/2), y1*difficulty, rect.width*difficulty, rect.height*difficulty);
 		}
 		debugRenderer.end();
-		
+	*/	
 		pix.begin();
 		
 		for (GridBlock b : blocks) {
