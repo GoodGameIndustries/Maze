@@ -184,8 +184,8 @@ GridBlock[] result = new GridBlock[4];
 				}
 			}
 		}
-	}
-	*/
+	}*/
+	
 	@Override
 	public void render(float delta) {
 
