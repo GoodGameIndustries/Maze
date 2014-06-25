@@ -68,13 +68,8 @@ public class GameScreen implements Screen,InputProcessor{
 
 	}
 	
-	public void genPath(int row, int column,int select){
+	/*public void genPath(int row, int column,int select){
 		recurCounter++;
-		/*if(recurCounter>4){
-			recurCounter=0;
-			//genGrid();
-			
-		}*/
 		if(select==0){
 			if(row-1 <=0){genPath(row,column,(select+1)%4);}
 			else{
@@ -112,19 +107,20 @@ public class GameScreen implements Screen,InputProcessor{
 				else{genPath(row,column,(select+1)%4);}
 			}
 		}
-	}
+	}*/
 	
 	public void genPath(GridBlock start){
 		int i = 0;
 		GridBlock current = start;
 		while(current.getPosition().y!=grid[0].length-1){
 			GridBlock[] walls = getAdjacent(current);
-			int r = (int) (Math.random()*walls.length);
-			while(walls[r] == null){r = (int) (Math.random()*walls.length);}
-			
-			walls[r].setState(1);
+			int r = (int) (Math.random()*4);
+			while(walls[r] == null){r = (r+1)%4;}
+			while(!pathAval(walls[r])){r=(r+1)%4;}
+			walls[r].setCorrectPath();walls[r].setState(1);
 			current=walls[r];
 		}
+		current.setState(4);
 		
 	}
 	
@@ -139,19 +135,12 @@ public class GameScreen implements Screen,InputProcessor{
 		return result;
 	}
 
-	public boolean pathAval(int row, int column,int select){
+	public boolean pathAval(GridBlock block){
 		int count=0;
-		if(row-1>=0 ){
-			if(grid[row-1][column].getState()==1){count++;}
-		}
-		if(row+1<=grid.length-1 ){
-			if(grid[row+1][column].getState()==1){count++;}
-		}
-		if(column-1>=0 ){
-			if(grid[row][column-1].getState()==1){count++;}
-		}
-		if(column+1<=grid[0].length-1 ){
-			if(grid[row][column+1].getState()==1){count++;}
+		if(block==null){return false;}
+		GridBlock[] around=getAdjacent(block);
+		for(GridBlock walls:around){
+			if(walls!=null && (walls.getCorrectPath() || walls.getState()==3 || walls.getState()==4)){count++;}
 		}
 		if(count>1){return false;}
 		else{return true;}
