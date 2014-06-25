@@ -114,16 +114,29 @@ public class GameScreen implements Screen,InputProcessor{
 		GridBlock current = start;
 		while(current.getPosition().y!=grid[0].length-1){
 			GridBlock[] walls = getAdjacent(current);
+			GridBlock[] walls2 = getAdjacentO(current);
 			int r = (int) (Math.random()*4);
 			while(walls[r] == null){r = (r+1)%4;}
-			while(!pathAval(walls[r])){r=(r+1)%4;}
-			walls[r].setCorrectPath();walls[r].setState(1);
+			if(walls2[r]==null || walls2[r].getState()!=1){
+			walls[r].setState(1);
 			current=walls[r];
+			}
 		}
 		current.setState(4);
 		
 	}
 	
+	private GridBlock[] getAdjacentO(GridBlock current) {
+GridBlock[] result = new GridBlock[4];
+		
+		try{result[0] = grid[(int) current.getPosition().x][(int) current.getPosition().y+2];}catch(ArrayIndexOutOfBoundsException e){result[0]=null;}
+		try{result[1] = grid[(int) current.getPosition().x+2][(int) current.getPosition().y];}catch(ArrayIndexOutOfBoundsException e){result[1]=null;}
+		try{result[2] = grid[(int) current.getPosition().x][(int) current.getPosition().y-2];}catch(ArrayIndexOutOfBoundsException e){result[2]=null;}
+		try{result[3] = grid[(int) current.getPosition().x-2][(int) current.getPosition().y];}catch(ArrayIndexOutOfBoundsException e){result[3]=null;}
+		
+		return result;
+	}
+
 	private GridBlock[] getAdjacent(GridBlock current) {
 		GridBlock[] result = new GridBlock[4];
 		
