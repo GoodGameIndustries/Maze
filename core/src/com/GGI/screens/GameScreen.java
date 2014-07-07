@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.GGI.screens;
 
 import java.util.ArrayList;
@@ -32,20 +29,20 @@ public class GameScreen implements Screen,InputProcessor{
 	private GridBlock[][] grid;
 	private int sideBuffer;
 	private int recurCounter=0;
-	
+
 	private Texture open;
 	private Texture blocked;
 	private Texture selected;
 	private Texture start;
 	private Texture end;
-	
+
 	private SpriteBatch pix;
-	
+
 	public GameScreen(int difficulty){
 		this.difficulty = difficulty;
-		
+
 	}
-	
+
 	private void genGrid() {
 		grid = new GridBlock[(int) xU][(int) yU];
 		for(int i = 0; i < xU; i++){
@@ -58,18 +55,27 @@ public class GameScreen implements Screen,InputProcessor{
 		int startRow=(int) (Math.random()*grid.length);
 		grid[startRow][0].setState(3);
 		try{
-			//genPath(startRow,0,1);
-			genPath(grid[startRow][0]);
+			genPath(startRow,0,1);
 		}
 		catch(StackOverflowError e){
 			genGrid();
 		}
 		//genWalls();
+		for(int i=0;i<grid.length;i++){
+			for(int j=0;j<grid[i].length;j++){
+				if(grid[i][j].getCorrectPath()){grid[i][j].setState(1);}
+			}
+		}
 
 	}
-	
-	/*public void genPath(int row, int column,int select){
+
+	public void genPath(int row, int column,int select){
 		recurCounter++;
+		/*if(recurCounter>4){
+			recurCounter=0;
+			//genGrid();
+			
+		}*/
 		if(select==0){
 			if(row-1 <=0){genPath(row,column,(select+1)%4);}
 			else{
@@ -107,100 +113,55 @@ public class GameScreen implements Screen,InputProcessor{
 				else{genPath(row,column,(select+1)%4);}
 			}
 		}
-	}*/
-	
-	public void genPath(GridBlock start){
-		int i = 0;
-		GridBlock current = start;
-		while(current.getPosition().y!=grid[0].length-1){
-			GridBlock[] walls = getAdjacent(current);
-			GridBlock[] walls2 = getAdjacentO(current);
-			int r = (int) (Math.random()*4);
-			while(walls[r] == null){r = (r+1)%4;}
-			if(walls2[r]==null || walls2[r].getState()!=1){
-			walls[r].setState(1);
-			current=walls[r];
-			}
-		}
-		current.setState(4);
-		
-	}
-	
-	private GridBlock[] getAdjacentO(GridBlock current) {
-GridBlock[] result = new GridBlock[4];
-		
-		try{result[0] = grid[(int) current.getPosition().x][(int) current.getPosition().y+2];}catch(ArrayIndexOutOfBoundsException e){result[0]=null;}
-		try{result[1] = grid[(int) current.getPosition().x+2][(int) current.getPosition().y];}catch(ArrayIndexOutOfBoundsException e){result[1]=null;}
-		try{result[2] = grid[(int) current.getPosition().x][(int) current.getPosition().y-2];}catch(ArrayIndexOutOfBoundsException e){result[2]=null;}
-		try{result[3] = grid[(int) current.getPosition().x-2][(int) current.getPosition().y];}catch(ArrayIndexOutOfBoundsException e){result[3]=null;}
-		
-		return result;
 	}
 
-	private GridBlock[] getAdjacent(GridBlock current) {
-		GridBlock[] result = new GridBlock[4];
-		
-		try{result[0] = grid[(int) current.getPosition().x][(int) current.getPosition().y+1];}catch(ArrayIndexOutOfBoundsException e){result[0]=null;}
-		try{result[1] = grid[(int) current.getPosition().x+1][(int) current.getPosition().y];}catch(ArrayIndexOutOfBoundsException e){result[1]=null;}
-		try{result[2] = grid[(int) current.getPosition().x][(int) current.getPosition().y-1];}catch(ArrayIndexOutOfBoundsException e){result[2]=null;}
-		try{result[3] = grid[(int) current.getPosition().x-1][(int) current.getPosition().y];}catch(ArrayIndexOutOfBoundsException e){result[3]=null;}
-		
-		return result;
-	}
-
-	public boolean pathAval(GridBlock block){
+	public boolean pathAval(int row, int column,int select){
 		int count=0;
-		if(block==null){return false;}
-		GridBlock[] around=getAdjacent(block);
-		for(GridBlock walls:around){
-			if(walls!=null && (walls.getCorrectPath() || walls.getState()==3 || walls.getState()==4)){count++;}
+		if(row-1>=0 ){
+			if(grid[row-1][column].getCorrectPath()){count++;}
+		}
+		if(row+1<=grid.length-1 ){
+			if(grid[row+1][column].getCorrectPath()){count++;}
+			
+		}
+		if(column-1>=0 ){
+			if(grid[row][column-1].getCorrectPath()){count++;}
+		}
+		if(column+1<=grid[0].length-1 ){
+			if(grid[row][column+1].getCorrectPath()){count++;}
 		}
 		if(count>1){return false;}
 		else{return true;}
 	}
-	
-	/*
+
 	public void genWalls(){
-		for(int i=0;i<grid.length;i++){
-			for(int j=0;j<grid[i].length;j++){
-				if(grid[i][j].getState()!=3 && grid[i][j].getState()!=4){
-					grid[i][j].setState(1);
-				}
-				int wallStart=(int)(Math.random()*grid[0].length);
-				int wallLength=3;
-				for(int k=wallStart;k<wallStart+wallLength;k++){
-					int l=k%grid[0].length;
-					if(grid[i][l].getState()!=3 && grid[i][l].getState()!=4 && !grid[i][l].getCorrectPath()){
-						grid[i][l].setState(0);
-					}
-				}
-				wallStart=(int)(Math.random()*grid[0].length);
-				wallLength=2;
-				for(int k=wallStart;k<wallStart+wallLength;k++){
-					int l=k%grid[0].length;
-					if(grid[i][l].getState()!=3 && grid[i][l].getState()!=4 && !grid[i][l].getCorrectPath()){
-						grid[i][l].setState(0);
-					}
+		System.out.println(grid.length+" "+grid[0].length);
+		for(int i=0;i<grid[0].length;i++){
+			for(int j=0;j<grid.length;j++){
+				if(grid[j][i].getState()==0){grid[j][i].setState(1);}
+				int wall=(int)(Math.random()*3);
+				if(wall%3!=0 && !grid[j][i].getCorrectPath() && grid[j][i].getState()!=3 && grid[j][i].getState()!=4){
+					grid[j][i].setState(0);
 				}
 			}
+
 		}
-	}*/
-	
+	}
+
 	@Override
 	public void render(float delta) {
 
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f,1);
 		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-		
+
 		//debugRenderer.setProjectionMatrix(cam.view);
-/*
 		debugRenderer.begin(ShapeType.Line);
-		
+
 		for (GridBlock b : blocks) {
 			Rectangle rect = b.getBounds();
 			float x1 = (b.getPosition().x + rect.x);
 			float y1 = (b.getPosition().y + rect.y);
-			
+
 			switch(b.getState()){
 			case 0: debugRenderer.setColor(new Color(0,1,0,1));
 			break;
@@ -213,23 +174,23 @@ GridBlock[] result = new GridBlock[4];
 			case 4: debugRenderer.setColor(new Color(1,0,0,1));
 			break;
 			}
-			
+
 			//debugRenderer.setColor(new Color(1, 0, 0, 1));
 			debugRenderer.rect((x1*difficulty)+(sideBuffer/2), y1*difficulty, rect.width*difficulty, rect.height*difficulty);
 		}
 		debugRenderer.end();
-	*/	
+
 		pix.begin();
-		
+
 		for (GridBlock b : blocks) {
-			
-			
+
+
 			Texture temp = null;
-			
+
 			Rectangle rect = b.getBounds();
 			float x1 = (b.getPosition().x + rect.x);
 			float y1 = (b.getPosition().y + rect.y);
-			
+
 			switch(b.getState()){
 			case 0: temp = blocked;
 			break;
@@ -244,24 +205,24 @@ GridBlock[] result = new GridBlock[4];
 			}
 			pix.draw(temp,(x1*difficulty)+(sideBuffer/2), y1*difficulty, rect.width*difficulty, rect.height*difficulty);
 		}
-		
+
 		pix.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void show() {
-		
+
 		xU = Gdx.graphics.getWidth()/difficulty;
 		yU = Gdx.graphics.getHeight()/difficulty;
-		
+
 		pix = new SpriteBatch();
-		
+
 		sideBuffer = Gdx.graphics.getWidth()%difficulty;
 
 		//this.cam = new OrthographicCamera(xU,yU);
@@ -274,25 +235,25 @@ GridBlock[] result = new GridBlock[4];
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void setImages() {
@@ -354,7 +315,7 @@ GridBlock[] result = new GridBlock[4];
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	private GridBlock getGridTouch(int x,int y){
 		GridBlock result = null;
 		System.out.println("<"+x+","+y+">");
@@ -366,16 +327,16 @@ GridBlock[] result = new GridBlock[4];
 			float y1 = (b.getPosition().y + rect.y)*difficulty;
 			y1=Gdx.graphics.getHeight()-y1-rect.height*difficulty;
 			if((x>x1 && x<x1+(rect.width*difficulty)) && (y>y1 && y<y1+(rect.height*difficulty))){
-				
-				
+
+
 				result = b;
 				System.out.println(x1+" "+y1);
 				break;
 			}
 		}
-		
-		
+
+
 		return result;
-		
+
 	}
 }
